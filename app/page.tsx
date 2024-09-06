@@ -1,8 +1,10 @@
 "use client"
 
 import { useState } from "react"
+import { useAuth, RedirectToSignIn } from "@clerk/nextjs"
 
 export default function Home() {
+  const { isSignedIn } = useAuth()
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [subject, setSubject] = useState("")
@@ -31,6 +33,11 @@ export default function Home() {
     const data = await response.json()
     alert(`Email created with ID: ${data.id}`)
   }
+
+    // Redirect to sign-in if the user is not signed in
+  if (!isSignedIn) {
+      return <RedirectToSignIn />;
+    }
 
   return (
     <div className="p-8">
