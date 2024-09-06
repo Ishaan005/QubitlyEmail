@@ -1,7 +1,12 @@
 import { prisma } from "@/lib/prisma"
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
+import { getAuth } from "@clerk/nextjs/server"
 
-export async function POST(request:Request) {
+export async function POST(request:NextRequest) {
+    const { userId } = getAuth(request)
+    if (!userId) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
     const body = await request.json()
     const { name, email } = body
 
@@ -10,6 +15,7 @@ export async function POST(request:Request) {
             data: {
                 name,
                 email,
+                userId,
             }
         })
         return NextResponse.json(user)
