@@ -58,14 +58,20 @@ export default function EmailEditor() {
       }
   
       const data = await response.json();
+      if (data.error) {
+        throw new Error(data.error);
+      }
+  
       setGeneratedHtml(data.content);
       setEditableHtml(data.content);
   
       // Update the existing email or create a new one
       await saveEmailToDatabase(data.content);
   
+      toast.success("Email generated successfully");
     } catch (error) {
       console.error("Error generating email:", error);
+      toast.error("Failed to generate email: " + (error instanceof Error ? error.message : "Unknown error"));
     } finally {
       setIsGenerating(false);
     }
@@ -132,12 +138,11 @@ export default function EmailEditor() {
           />
         </div>
         <div className="overflow-auto custom-scrollbar">
-          <h2 className="text-xl font-semibold mb-2">Live Preview</h2>
-          <div
-            className="border p-4 h-[calc(100%-2rem)] overflow-auto bg-white custom-scrollbar"
-            dangerouslySetInnerHTML={{ __html: editableHtml }}
-          />
-        </div>
+            <h2 className="text-xl font-semibold mb-2">Live Preview</h2>
+            <div className="border p-4 h-[calc(100%-2rem)] overflow-auto bg-white custom-scrollbar">
+                <div className="email-preview" dangerouslySetInnerHTML={{ __html: editableHtml }} />
+            </div>
+            </div>
       </div>
       <div className="p-4 bg-gray-100 border-t">
         <div className="max-w-3xl mx-auto">

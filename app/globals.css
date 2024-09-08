@@ -113,3 +113,10 @@ body {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+.email-preview {
+  all: initial;
+  * {
+    all: revert;
+  }
+}

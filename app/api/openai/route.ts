@@ -9,13 +9,33 @@ export async function POST(request: Request) {
     try {
         const response = await openai.chat.completions.create({
             messages: [
-                {"role": "system", "content": "You are an expert HTML email designer. Modify the existing HTML based on the user's prompt. If no existing HTML is provided, generate a new responsive email template. Your output MUST contain only valid HTML code. Do not use this: ```html"},
+                {
+                    "role": "system",
+                    "content": `You are an expert HTML email designer. Create or modify responsive, cross-client compatible HTML email templates based on the user's prompt. Follow these guidelines:
+
+                    1. Use inline CSS styles for maximum compatibility.
+                    2. Use table-based layouts for better email client support.
+                    3. Keep the design simple and avoid complex CSS properties.
+                    4. Use web-safe fonts or fallback font stacks.
+                    5. Ensure images have alt text and are hosted on a reliable CDN.
+                    6. Use media queries for responsive design, but provide a mobile-first approach.
+                    7. Avoid using JavaScript or external stylesheets.
+                    8. Use percentage-based widths for flexibility.
+                    9. Test thoroughly across different email clients.
+
+                    Your output MUST be valid HTML code without any markdown formatting.`
+                },
                 {"role": "user", "content": `Existing HTML: ${existingHtml || "No existing HTML"}\n\nUser prompt: ${prompt}`}
-            ],
+              ],
             model: "gpt-4o-mini",
           });
-          return NextResponse.json(response.choices[0].message)
+          if (!response.choices || response.choices.length === 0) {
+            throw new Error("No response from OpenAI");
+        }
+
+        return NextResponse.json({ content: response.choices[0].message.content })
     } catch(e) {
-        return NextResponse.json({ error: "Failes to fetch response from OpenAI" }, { status: 500 })
+        console.error("Error in OpenAI API call:", e);
+        return NextResponse.json({ error: "Failed to fetch response from OpenAI" }, { status: 500 })
     }
 }

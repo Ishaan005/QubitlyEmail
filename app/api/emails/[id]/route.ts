@@ -53,10 +53,38 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         prompt,
       },
     });
-
     return NextResponse.json(updatedEmail);
   } catch (error) {
     console.error("Error updating email:", error);
     return NextResponse.json({ error: "Failed to update email" }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+  try {
+    const { userId } = getAuth(request);
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const emailId = params.id;
+
+    const deletedEmail = await prisma.email.delete({
+      where: {
+        id: emailId,
+        user: {
+          userId: userId,
+        },
+      },
+    });
+
+    if (!deletedEmail) {
+      return NextResponse.json({ error: "Email not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "Email deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting email:", error);
+    return NextResponse.json({ error: "Failed to delete email" }, { status: 500 });
   }
 }

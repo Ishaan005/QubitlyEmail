@@ -61,6 +61,25 @@ export default function Dashboard() {
   const handleEditClick = (emailId: string) => {
     window.location.href = `/editor/${emailId}`;
   }
+
+  const handleDeleteClick = async (emailId: string) => {
+    if (window.confirm("Are you sure you want to delete this email template?")) {
+      try {
+        const response = await fetch(`/api/emails/${emailId}`, {
+          method: 'DELETE',
+        });
+        if (response.ok) {
+          // Remove the deleted email from the recentEmails state
+          setRecentEmails(recentEmails.filter(email => email.id !== emailId));
+        } else {
+          console.error("Failed to delete email");
+        }
+      } catch (error) {
+        console.error("Error deleting email:", error);
+      }
+    }
+  };
+
   return (
     <div className="p-8">
       <h1 className="text-3xl font-bold mb-6">Email Generator Dashboard</h1>
@@ -93,22 +112,26 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <h2 className="text-2xl font-semibold mb-4">Recent Email Templates</h2>
       {recentEmails.length > 0 ? (
-      <ul className="space-y-4">
-        {recentEmails.map((email) => (
-          <li key={email.id} className="bg-card p-4 rounded-lg shadow">
-            <h3 className="font-bold">{email.subject}</h3>
-            <p className="text-sm text-muted-foreground">{new Date(email.createdAt).toLocaleDateString()}</p>
-            <Button variant="outline" size="sm" className="mt-2" onClick={() => handleEditClick(email.id)}>
-              Edit
-            </Button>
-          </li>
-        ))}
-      </ul>
-    ) : (
-      <p>No recent emails found.</p>
-    )}
+        <ul className="space-y-4">
+          {recentEmails.map((email) => (
+            <li key={email.id} className="bg-card p-4 rounded-lg shadow">
+              <h3 className="font-bold">{email.subject}</h3>
+              <p className="text-sm text-muted-foreground">{new Date(email.createdAt).toLocaleDateString()}</p>
+              <div className="mt-2 space-x-2">
+                <Button variant="outline" size="sm" onClick={() => handleEditClick(email.id)}>
+                  Edit
+                </Button>
+                <Button variant="destructive" size="sm" onClick={() => handleDeleteClick(email.id)}>
+                  Delete
+                </Button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No recent emails found.</p>
+      )}
     </div>
   );
 }
