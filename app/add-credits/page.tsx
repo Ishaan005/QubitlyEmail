@@ -31,7 +31,6 @@ export default function AddCredits() {
       <h1 className="text-3xl font-bold mb-6">Add Credits</h1>
       <div className="max-w-md">
         <p className="mb-4">Each credit costs $0.50 and allows you to generate one email. </p>
-        <p className="mb-4">AI Prompted edits are FREE!</p>
         <Input
           type="number"
           value={amount}

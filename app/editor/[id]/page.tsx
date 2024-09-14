@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@clerk/nextjs";
 import toast from 'react-hot-toast';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function EmailEditor() {
   const [prompt, setPrompt] = useState("");
@@ -17,6 +18,7 @@ export default function EmailEditor() {
   const [editableHtml, setEditableHtml] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [subject, setSubject] = useState("");
+  const [model, setModel] = useState("gpt-4o-mini");
 
   useEffect(() => {
     if (emailId && emailId !== "new") {
@@ -31,7 +33,6 @@ export default function EmailEditor() {
         const emailData = await response.json();
         setGeneratedHtml(emailData.content);
         setEditableHtml(emailData.content);
-        // Keep the original prompt if available, otherwise use a default message
         setPrompt(emailData.prompt || "Suggest changes to the email here...");
         setSubject(emailData.subject || "");
       } else {
@@ -45,9 +46,15 @@ export default function EmailEditor() {
   const generateEmail = async () => {
     setIsGenerating(true);
     try {
+      const creditAmount = model === "gpt-4o-mini" ? 0.5 : 1;
+      
       // Deduct credit before generating email
       const creditResponse = await fetch("/api/deduct-credits", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ creditAmount }),
       });
   
       if (!creditResponse.ok) {
@@ -61,17 +68,18 @@ export default function EmailEditor() {
         throw new Error(creditData.error);
       }
   
-      const response = await fetch("/api/openai", {
+      const apiEndpoint = model === "claude-3-5-sonnet-20240620" ? "/api/claude" : "/api/openai";
+      const response = await fetch(apiEndpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ prompt, existingHtml: editableHtml, subject }),
+        body: JSON.stringify({ prompt, existingHtml: editableHtml, subject, model }),
       });
   
       if (!response.ok) {
         const errorText = await response.text();
-        console.error("OpenAI error response:", errorText);
+        console.error("API error response:", errorText);
         throw new Error(`Failed to generate email: ${response.status}`);
       }
   
@@ -160,7 +168,7 @@ export default function EmailEditor() {
             <div className="border p-4 h-[calc(100%-2rem)] overflow-auto bg-white custom-scrollbar">
                 <div className="email-preview" dangerouslySetInnerHTML={{ __html: editableHtml }} />
             </div>
-            </div>
+          </div>
       </div>
       <div className="p-4 bg-gray-100 border-t">
         <div className="max-w-3xl mx-auto">
@@ -172,8 +180,17 @@ export default function EmailEditor() {
             className="w-full mb-2 rounded-lg resize-none custom-scrollbar"
           />
           <div className="flex space-x-2">
+            <Select value={model} onValueChange={setModel}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select model" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="gpt-4">GPT-4o-mini</SelectItem>
+                <SelectItem value="claude-3-sonnet-20240229">Claude 3.5 Sonnet</SelectItem>
+              </SelectContent>
+            </Select>
             <Button onClick={generateEmail} disabled={isGenerating} className="flex-1 rounded-lg">
-              {isGenerating ? "Generating..." : "Generate Email"}
+              {isGenerating ? "Generating..." : emailId === "new" ? "Generate Email" : "Edit with AI"}
             </Button>
             <Button onClick={() => saveEmailToDatabase(editableHtml)} className="flex-1 rounded-lg">
               Save Changes
