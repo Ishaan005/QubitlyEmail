@@ -36,6 +36,7 @@ export default function AddCredits() {
           value={amount}
           onChange={(e) => setAmount(Number(e.target.value))}
           min={1}
+          step={0.5}
           className="mb-4"
         />
         <p className="mb-4">Total cost: ${(amount * 0.5).toFixed(2)}</p>

@@ -7,11 +7,8 @@ export async function GET(request: NextRequest) {
     const { userId } = getAuth(request);
 
     if (!userId) {
-      console.log("Unauthorized access attempt");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
-    console.log("Fetching recent emails for user:", userId);
 
     const recentEmails = await prisma.email.findMany({
       where: {
@@ -30,8 +27,6 @@ export async function GET(request: NextRequest) {
         createdAt: true,
       },
     });
-
-    console.log("Recent emails fetched:", recentEmails.length);
 
     return NextResponse.json(recentEmails);
   } catch (error) {

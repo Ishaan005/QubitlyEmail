@@ -117,7 +117,7 @@ export default function Dashboard() {
     </div>
     <div className="bg-card p-4 rounded-lg shadow">
       <h3 className="font-semibold mb-2">Credits</h3>
-      <p className="text-2xl">{emailStats?.credits || 0}</p>
+      <p className="text-2xl">{emailStats?.credits.toFixed(1) || 0}</p>
       <Button onClick={handleAddCredits} className="mt-2">Add Credits</Button>
     </div>
   </div>

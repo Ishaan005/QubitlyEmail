@@ -91,10 +91,13 @@ export default function EmailEditor() {
       setGeneratedHtml(data.content);
       setEditableHtml(data.content);
   
-      // Update the existing email or create a new one
-      await saveEmailToDatabase(data.content);
-  
-      toast.success("Email generated successfully");
+      // Automatically save only if it's a new email
+      if (emailId === "new") {
+        await saveEmailToDatabase(data.content);
+        toast.success("Email generated and saved successfully");
+      } else {
+        toast.success("Email generated. Click 'Save Changes' to update.");
+      }
     } catch (error) {
       console.error("Error generating email:", error);
       toast.error("Failed to generate email: " + (error instanceof Error ? error.message : "Unknown error"));
@@ -154,21 +157,23 @@ export default function EmailEditor() {
           className="w-full p-2 border rounded"
         />
       </div>
-      <div className="flex-grow overflow-hidden grid grid-cols-2 gap-4 p-4">
-        <div className="overflow-auto custom-scrollbar">
-          <h2 className="text-xl font-semibold mb-2">HTML Editor</h2>
-          <Textarea
-            value={editableHtml}
-            onChange={handleHtmlChange}
-            className="w-full h-[calc(100%-2rem)] resize-none custom-scrollbar"
-          />
+      <div className="flex-grow grid grid-cols-2 gap-4 p-4">
+      <div className="flex flex-col h-full">
+        <h2 className="text-xl font-semibold mb-2">HTML Editor</h2>
+        <p className="text-sm text-gray-500 mb-2">You can directly edit the HTML content here.</p>
+        <Textarea
+          value={editableHtml}
+          onChange={handleHtmlChange}
+          className="flex-grow resize-none custom-scrollbar"
+        />
+      </div>
+      <div className="flex flex-col h-full">
+        <h2 className="text-xl font-semibold mb-2">Live Preview</h2>
+        <p className="text-sm text-gray-500 mb-2">You can preview the email here.</p>
+        <div className="flex-grow border p-4 overflow-auto bg-white custom-scrollbar">
+          <div className="email-preview" dangerouslySetInnerHTML={{ __html: editableHtml }} />
         </div>
-        <div className="overflow-auto custom-scrollbar">
-            <h2 className="text-xl font-semibold mb-2">Live Preview</h2>
-            <div className="border p-4 h-[calc(100%-2rem)] overflow-auto bg-white custom-scrollbar">
-                <div className="email-preview" dangerouslySetInnerHTML={{ __html: editableHtml }} />
-            </div>
-          </div>
+      </div>
       </div>
       <div className="p-4 bg-gray-100 border-t">
         <div className="max-w-3xl mx-auto">
@@ -185,12 +190,12 @@ export default function EmailEditor() {
                 <SelectValue placeholder="Select model" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="gpt-4">GPT-4o-mini</SelectItem>
-                <SelectItem value="claude-3-sonnet-20240229">Claude 3.5 Sonnet</SelectItem>
+                <SelectItem value="gpt-4o-mini">GPT-4o-mini</SelectItem>
+                <SelectItem value="claude-3-5-sonnet-20240620">Claude 3.5 Sonnet</SelectItem>
               </SelectContent>
             </Select>
             <Button onClick={generateEmail} disabled={isGenerating} className="flex-1 rounded-lg">
-              {isGenerating ? "Generating..." : emailId === "new" ? "Generate Email" : "Edit with AI"}
+              {isGenerating ? "Generating..." : emailId === "new" ? "Generate & Save Email" : "Edit with AI"}
             </Button>
             <Button onClick={() => saveEmailToDatabase(editableHtml)} className="flex-1 rounded-lg">
               Save Changes
