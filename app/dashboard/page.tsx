@@ -17,6 +17,7 @@ interface EmailStats {
   totalEmails: number;
   generatedThisWeek: number;
   averageGenerationTime: number;
+  credits: number;
 }
 
 export default function Dashboard() {
@@ -61,6 +62,10 @@ export default function Dashboard() {
   const handleEditClick = (emailId: string) => {
     window.location.href = `/editor/${emailId}`;
   }
+  
+  const handleAddCredits = () => {
+    router.push('/add-credits');
+  };
 
   const handleDeleteClick = async (emailId: string) => {
     if (window.confirm("Are you sure you want to delete this email template?")) {
@@ -97,20 +102,25 @@ export default function Dashboard() {
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-card p-4 rounded-lg shadow">
-          <h3 className="font-semibold mb-2">Total Emails</h3>
-          <p className="text-2xl">{emailStats?.totalEmails || 0}</p>
-        </div>
-        <div className="bg-card p-4 rounded-lg shadow">
-          <h3 className="font-semibold mb-2">Generated This Week</h3>
-          <p className="text-2xl">{emailStats?.generatedThisWeek || 0}</p>
-        </div>
-        <div className="bg-card p-4 rounded-lg shadow">
-          <h3 className="font-semibold mb-2">Avg. Generation Time</h3>
-          <p className="text-2xl">{emailStats?.averageGenerationTime || 0}s</p>
-        </div>
-      </div>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div className="bg-card p-4 rounded-lg shadow">
+      <h3 className="font-semibold mb-2">Total Emails</h3>
+      <p className="text-2xl">{emailStats?.totalEmails || 0}</p>
+    </div>
+    <div className="bg-card p-4 rounded-lg shadow">
+      <h3 className="font-semibold mb-2">Generated This Week</h3>
+      <p className="text-2xl">{emailStats?.generatedThisWeek || 0}</p>
+    </div>
+    <div className="bg-card p-4 rounded-lg shadow">
+      <h3 className="font-semibold mb-2">Avg. Generation Time</h3>
+      <p className="text-2xl">{emailStats?.averageGenerationTime || 0}s</p>
+    </div>
+    <div className="bg-card p-4 rounded-lg shadow">
+      <h3 className="font-semibold mb-2">Credits</h3>
+      <p className="text-2xl">{emailStats?.credits || 0}</p>
+      <Button onClick={handleAddCredits} className="mt-2">Add Credits</Button>
+    </div>
+  </div>
 
       {recentEmails.length > 0 ? (
         <ul className="space-y-4">

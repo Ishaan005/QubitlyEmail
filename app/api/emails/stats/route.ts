@@ -10,6 +10,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const user = await prisma.user.findUnique({
+      where: { userId },
+      select: { credits: true },
+    });
+
     const totalEmails = await prisma.email.count({
       where: {
         user: {
@@ -40,6 +45,7 @@ export async function GET(request: NextRequest) {
       totalEmails,
       generatedThisWeek,
       averageGenerationTime,
+      credits: user?.credits || 0,
     };
 
     return NextResponse.json(stats);

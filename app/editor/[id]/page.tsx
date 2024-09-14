@@ -45,6 +45,22 @@ export default function EmailEditor() {
   const generateEmail = async () => {
     setIsGenerating(true);
     try {
+      // Deduct credit before generating email
+      const creditResponse = await fetch("/api/deduct-credits", {
+        method: "POST",
+      });
+  
+      if (!creditResponse.ok) {
+        const errorText = await creditResponse.text();
+        console.error("Credit deduction error response:", errorText);
+        throw new Error(`Failed to deduct credit: ${creditResponse.status}`);
+      }
+  
+      const creditData = await creditResponse.json();
+      if (creditData.error) {
+        throw new Error(creditData.error);
+      }
+  
       const response = await fetch("/api/openai", {
         method: "POST",
         headers: {
@@ -54,7 +70,9 @@ export default function EmailEditor() {
       });
   
       if (!response.ok) {
-        throw new Error("Failed to generate email");
+        const errorText = await response.text();
+        console.error("OpenAI error response:", errorText);
+        throw new Error(`Failed to generate email: ${response.status}`);
       }
   
       const data = await response.json();

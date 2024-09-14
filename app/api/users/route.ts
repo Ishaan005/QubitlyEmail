@@ -6,20 +6,19 @@ export async function POST(request:NextRequest) {
     const { userId } = getAuth(request)
     if (!userId) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
+    }
     const body = await request.json()
     const { name, email } = body
 
     try {
-        const user = await prisma.user.create({
-            data: {
-                name,
-                email,
-                userId,
-            }
+        const user = await prisma.user.upsert({
+            where: { userId },
+            update: { name, email },
+            create: { userId, name, email },
         })
         return NextResponse.json(user)
     } catch(error) {
-        return NextResponse.json({error: "Failed to create user"}, {status: 500})
+        console.error("Error creating/updating user:", error);
+        return NextResponse.json({ error: "Failed to create/update user" }, { status: 500 });
     }
 }
