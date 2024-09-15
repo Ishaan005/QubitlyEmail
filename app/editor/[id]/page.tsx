@@ -4,23 +4,20 @@ import { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { useAuth } from "@clerk/nextjs";
 import toast from 'react-hot-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs';
 import 'prismjs/components/prism-markup';
-import EmailEditingTools from "@/components/EmailEditingTools";
 
 export default function EmailEditor() {
   const [prompt, setPrompt] = useState("");
-  const [generatedHtml, setGeneratedHtml] = useState("");
+  const [,setGeneratedHtml] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const { userId } = useAuth();
+
   const params = useParams();
   const emailId = params.id as string;
   const [editableHtml, setEditableHtml] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
   const [subject, setSubject] = useState("");
   const [model, setModel] = useState("gpt-4o-mini");
   const htmlEditorRef = useRef<any>(null);
@@ -140,17 +137,16 @@ export default function EmailEditor() {
         window.history.replaceState({}, "", `/editor/${savedEmail.id}`);
       }
   
-      console.log("Email saved successfully");
+      console.log("Email saved successfully", content);
       toast.success("Changes Saved");
     } catch (error) {
-      console.error("Error saving email:", error);
       toast.error("Failed to save changes");
     }
   };
 
-  const handleHtmlChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setEditableHtml(e.target.value);
-  };
+  // const handleHtmlChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  //   setEditableHtml(e.target.value);
+  // };
 
   const handlePreviewHover = (event: React.MouseEvent<HTMLDivElement>) => {
     const target = event.target as HTMLElement;

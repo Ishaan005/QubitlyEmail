@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 
 export default function AddCredits() {
   const [amount, setAmount] = useState(10);
-  const router = useRouter();
 
   const handleAddCredits = async () => {
     try {

@@ -83,7 +83,7 @@ export default function LandingPage() {
         <div className="bg-gradient-to-r from-gray-800 to-gray-700 p-8 rounded-lg mb-12">
           <h3 className="text-2xl font-semibold mb-4">The Problem:</h3>
           <p className="text-lg mb-4">
-            Are you tired of spending hours wrestling with HTML code or paying expensive designers for every email campaign? Do you struggle to create emails that look professional and drive results? You're not alone.
+            Are you tired of spending hours wrestling with HTML code or paying expensive designers for every email campaign? Do you struggle to create emails that look professional and drive results? You&apos;re not alone.
           </p>
           <p className="text-lg">
             Most businesses waste valuable time and resources on email design, leading to delayed campaigns, inconsistent branding, and poor engagement rates.
@@ -120,7 +120,7 @@ export default function LandingPage() {
           <h3 className="text-2xl font-semibold mb-4">Flexible Pricing:</h3>
           <p className="text-lg mb-4">
             Sign up for free and only pay for what you use. No commitments, no subscriptions.
-          </p>
+          </p>  
           <p className="text-lg mb-4">
             Generate emails for just $0.50 per credit.
           </p>
@@ -142,9 +142,9 @@ export default function LandingPage() {
             <a href="/dashboard">Go to Dashboard</a>
           </Button>
         )}
-        <p className="mt-8 text-sm text-gray-400">
-          Don't let poor email design hold your business back. Take action now and start creating emails that convert!
-        </p>
+      <p className="mt-8 text-sm text-gray-400">
+        Don&apos;t let poor email design hold your business back. Take action now and start creating emails that convert!
+      </p>
       </div>
     </div>
   );

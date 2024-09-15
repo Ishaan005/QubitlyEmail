@@ -21,7 +21,7 @@ interface EmailStats {
 }
 
 export default function Dashboard() {
-  const { userId, isSignedIn } = useAuth();
+  const { userId } = useAuth();
   const [recentEmails, setRecentEmails] = useState<Email[]>([]);
   const [emailStats, setEmailStats] = useState<EmailStats | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
