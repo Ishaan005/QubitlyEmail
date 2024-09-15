@@ -120,3 +120,41 @@ body {
     all: revert;
   }
 }
+
+.prism-editor__textarea:focus {
+  outline: none;
+}
+
+.prism-editor__container {
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+}
+
+.token.tag,
+.token.attr-name,
+.token.punctuation,
+.token.attr-value {
+  color: #2a4365;
+}
+
+.token.attr-value {
+  color: #2b6cb0;
+}
+
+.token.string {
+  color: #2f855a;
+}
+
+.prism-editor__container {
+  position: relative;
+}
+
+.highlighted-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background-color: rgba(255, 255, 0, 0.3);
+  pointer-events: none;
+  z-index: 1;
+}

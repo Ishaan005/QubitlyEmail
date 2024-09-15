@@ -1,12 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@clerk/nextjs";
 import toast from 'react-hot-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs';
+import 'prismjs/components/prism-markup';
 
 export default function EmailEditor() {
   const [prompt, setPrompt] = useState("");
@@ -19,6 +22,8 @@ export default function EmailEditor() {
   const [isEditing, setIsEditing] = useState(false);
   const [subject, setSubject] = useState("");
   const [model, setModel] = useState("gpt-4o-mini");
+  const htmlEditorRef = useRef<any>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (emailId && emailId !== "new") {
@@ -146,6 +151,59 @@ export default function EmailEditor() {
     setEditableHtml(e.target.value);
   };
 
+  const handlePreviewHover = (event: React.MouseEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement;
+    const elementPath = getElementPath(target);
+    highlightCodeInEditor(elementPath);
+  };
+
+  const getElementPath = (element: HTMLElement): string => {
+    const path: string[] = [];
+    let currentElement: HTMLElement | null = element;
+  
+    while (currentElement && currentElement !== previewRef.current) {
+      let selector = currentElement.tagName.toLowerCase();
+      if (currentElement.id) {
+        selector += `#${currentElement.id}`;
+      } else if (currentElement.className) {
+        selector += `.${currentElement.className.split(' ').join('.')}`;
+      }
+      path.unshift(selector);
+      currentElement = currentElement.parentElement;
+    }
+  
+    return path.join(' > ');
+  };
+
+  const highlightCodeInEditor = (elementPath: string) => {
+    if (!htmlEditorRef.current) return;
+  
+    const editorContent = editableHtml;
+    const lines = editorContent.split('\n');
+    let targetLine = -1;
+  
+    for (let i = 0; i < lines.length; i++) {
+      if (lines[i].includes(elementPath.split(' > ').pop() || '')) {
+        targetLine = i;
+        break;
+      }
+    }
+  
+    if (targetLine !== -1) {
+      // Calculate the position to scroll to
+      const lineHeight = 20; // Adjust this value based on your editor's line height
+      const scrollTop = targetLine * lineHeight;
+  
+      // Scroll the editor container
+      if (htmlEditorRef.current) {
+        htmlEditorRef.current.scrollTop = scrollTop;
+      }
+  
+      // Log the highlighted line (since we can't actually highlight it in this editor)
+      console.log(`Highlighted line: ${targetLine + 1}`);
+    }
+  };
+
   return (
     <div className="flex flex-col h-[calc(100vh-64px)]">
       <div className="p-4 bg-gray-100 border-b">
@@ -161,16 +219,31 @@ export default function EmailEditor() {
       <div className="flex flex-col h-full">
         <h2 className="text-xl font-semibold mb-2">HTML Editor</h2>
         <p className="text-sm text-gray-500 mb-2">You can directly edit the HTML content here.</p>
-        <Textarea
+        <Editor
           value={editableHtml}
-          onChange={handleHtmlChange}
+          onValueChange={(code) => setEditableHtml(code)}
+          highlight={code => highlight(code, languages.markup)}
+          padding={10}
+          style={{
+            fontFamily: '"Fira code", "Fira Mono", monospace',
+            fontSize: 14,
+            backgroundColor: '#f5f5f5',
+            borderRadius: '4px',
+            height: '100%',
+            overflow: 'auto',
+          }}
           className="flex-grow resize-none custom-scrollbar"
+          textareaId="codeArea"
+          ref={htmlEditorRef}
         />
       </div>
       <div className="flex flex-col h-full">
         <h2 className="text-xl font-semibold mb-2">Live Preview</h2>
         <p className="text-sm text-gray-500 mb-2">You can preview the email here.</p>
-        <div className="flex-grow border p-4 overflow-auto bg-white custom-scrollbar">
+        <div 
+          ref={previewRef}
+          className="flex-grow border p-4 overflow-auto bg-white custom-scrollbar"
+          onMouseOver = {handlePreviewHover}>
           <div className="email-preview" dangerouslySetInnerHTML={{ __html: editableHtml }} />
         </div>
       </div>
