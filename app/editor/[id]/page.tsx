@@ -20,7 +20,7 @@ export default function EmailEditor() {
   const [editableHtml, setEditableHtml] = useState("");
   const [subject, setSubject] = useState("");
   const [model, setModel] = useState("gpt-4o-mini");
-  const htmlEditorRef = useRef<any>(null);
+  const htmlEditorRef = useRef<React.RefObject<HTMLDivElement>>(null);
   const previewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -192,8 +192,8 @@ export default function EmailEditor() {
       const scrollTop = targetLine * lineHeight;
   
       // Scroll the editor container
-      if (htmlEditorRef.current) {
-        htmlEditorRef.current.scrollTop = scrollTop;
+      if (htmlEditorRef.current && htmlEditorRef.current.current) {
+        htmlEditorRef.current.current.scrollTop = scrollTop;
       }
   
       // Log the highlighted line (since we can't actually highlight it in this editor)
@@ -231,7 +231,7 @@ export default function EmailEditor() {
           }}
           className="flex-grow resize-none custom-scrollbar"
           textareaId="codeArea"
-          ref={htmlEditorRef}
+          ref={htmlEditorRef as React.RefObject<any>}
         />
       </div>
       <div className="flex flex-col h-full">
