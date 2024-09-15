@@ -219,7 +219,7 @@ export default function EmailEditor() {
         <Editor
           value={editableHtml}
           onValueChange={(code) => setEditableHtml(code)}
-          highlight={code => highlight(code, languages.markup)}
+          highlight={code => highlight(code, languages.markup, 'html')}
           padding={10}
           style={{
             fontFamily: '"Fira code", "Fira Mono", monospace',

@@ -131,7 +131,7 @@ export default function LandingPage() {
         {!isSignedIn ? (
           <div className="flex flex-col space-y-4">
             <Button asChild className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-bold py-3 px-6 rounded-full text-lg">
-              <a href="/sign-up">Get Started Now - It's Free!</a>
+              <a href="/sign-up">Get Started Now - It&apos;s Free!</a>
             </Button>
             <p className="text-sm text-gray-400">
               Already have an account? <a href="/sign-in" className="text-blue-400 hover:underline">Sign In</a>
