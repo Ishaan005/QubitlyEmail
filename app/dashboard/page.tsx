@@ -142,6 +142,11 @@ export default function Dashboard() {
       ) : (
         <p>No recent emails found.</p>
       )}
+      <div className="fixed bottom-4 right-4">
+        <Button variant="outline" size="sm" asChild>
+          <a href="/feedback">Feedback & Support</a>
+        </Button>
+      </div>
     </div>
   );
 }

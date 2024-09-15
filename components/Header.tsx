@@ -25,6 +25,9 @@ export function Header({ className }: { className?: string }) {
               <Link href="/settings" className="text-foreground hover:text-primary">
                 Settings
               </Link>
+              <Link href="/feedback" className="text-foreground hover:text-primary">
+                Support
+              </Link>
               <UserButton afterSignOutUrl="/" />
             </>
           ) : (

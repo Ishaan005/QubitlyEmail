@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs';
 import 'prismjs/components/prism-markup';
+import EmailEditingTools from "@/components/EmailEditingTools";
 
 export default function EmailEditor() {
   const [prompt, setPrompt] = useState("");
@@ -263,8 +264,8 @@ export default function EmailEditor() {
                 <SelectValue placeholder="Select model" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="gpt-4o-mini">GPT-4o-mini</SelectItem>
-                <SelectItem value="claude-3-5-sonnet-20240620">Claude 3.5 Sonnet</SelectItem>
+                <SelectItem value="gpt-4o-mini">GPT-4o-mini (0.5 credits)</SelectItem>
+                <SelectItem value="claude-3-5-sonnet-20240620">Claude 3.5 Sonnet (1 credit)</SelectItem>
               </SelectContent>
             </Select>
             <Button onClick={generateEmail} disabled={isGenerating} className="flex-1 rounded-lg">
