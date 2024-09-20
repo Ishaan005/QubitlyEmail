@@ -14,6 +14,7 @@ export default function EmailEditor() {
   const [prompt, setPrompt] = useState("");
   const [,setGeneratedHtml] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [hasGenerated, setHasGenerated] = useState(false);
 
   const params = useParams();
   const emailId = params.id as string;
@@ -97,6 +98,7 @@ export default function EmailEditor() {
       // Automatically save only if it's a new email
       if (emailId === "new") {
         await saveEmailToDatabase(data.content);
+        setHasGenerated(true);
         toast.success("Email generated and saved successfully");
       } else {
         toast.success("Email generated. Click 'Save Changes' to update.");
@@ -121,7 +123,7 @@ export default function EmailEditor() {
         },
         body: JSON.stringify({
           subject: subject,
-          content: editableHtml,
+          content: content,
           prompt: prompt,
         }),
       });
@@ -131,16 +133,17 @@ export default function EmailEditor() {
       }
   
       const savedEmail = await response.json();
+      console.log("Email saved successfully", savedEmail);
       
-      // Update the emailId if it's a new email
-      if (emailId === "new") {
-        window.history.replaceState({}, "", `/editor/${savedEmail.id}`);
+      if (method === "PUT") {
+        toast.success("Changes Saved");
       }
   
-      console.log("Email saved successfully", content);
-      toast.success("Changes Saved");
+      return savedEmail;
     } catch (error) {
+      console.error("Error saving email:", error);
       toast.error("Failed to save changes");
+      return null;
     }
   };
 
@@ -265,7 +268,7 @@ export default function EmailEditor() {
               </SelectContent>
             </Select>
             <Button onClick={generateEmail} disabled={isGenerating} className="flex-1 rounded-lg">
-              {isGenerating ? "Generating..." : emailId === "new" ? "Generate & Save Email" : "Edit with AI"}
+              {isGenerating ? "Generating..." : emailId === "new" && !hasGenerated ? "Generate & Save Email" : "Edit with AI"}
             </Button>
             <Button onClick={() => saveEmailToDatabase(editableHtml)} className="flex-1 rounded-lg">
               Save Changes

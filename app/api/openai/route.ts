@@ -15,13 +15,12 @@ export async function POST(request: Request) {
 
                     1. Use inline CSS styles for maximum compatibility.
                     2. Use table-based layouts for better email client support.
-                    3. Keep the design simple and avoid complex CSS properties.
-                    4. Use web-safe fonts or fallback font stacks.
-                    5. Ensure images have alt text and are hosted on a reliable CDN.
-                    6. Use media queries for responsive design, but provide a mobile-first approach.
-                    7. Avoid using JavaScript or external stylesheets.
-                    8. Use percentage-based widths for flexibility.
-                    9. Test thoroughly across different email clients.
+                    3. Use web-safe fonts or fallback font stacks.
+                    4. Ensure images have alt text and are hosted on a reliable CDN.
+                    5. Use media queries for responsive design, but provide a mobile-first approach.
+                    6. Avoid using JavaScript or external stylesheets.
+                    7. Use percentage-based widths for flexibility.
+                    8. Test thoroughly across different email clients.
 
                     Your output MUST be valid HTML code without any markdown formatting.`
                 },

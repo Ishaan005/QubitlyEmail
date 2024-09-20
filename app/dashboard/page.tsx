@@ -87,7 +87,7 @@ export default function Dashboard() {
 
   return (
     <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">Email Generator Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
       
       <div className="mb-8">
       <Button size="lg" className="mr-4" onClick={() => router.push('/editor/new')}>
@@ -127,7 +127,7 @@ export default function Dashboard() {
           {recentEmails.map((email) => (
             <li key={email.id} className="bg-card p-4 rounded-lg shadow">
               <h3 className="font-bold">{email.subject}</h3>
-              <p className="text-sm text-muted-foreground">{new Date(email.createdAt).toLocaleDateString()}</p>
+              <p className="text-sm text-muted-foreground">{new Date(email.createdAt).toLocaleString()}</p>
               <div className="mt-2 space-x-2">
                 <Button variant="outline" size="sm" onClick={() => handleEditClick(email.id)}>
                   Edit
