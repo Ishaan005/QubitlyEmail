@@ -23,17 +23,21 @@ export default function AddCredits() {
   
       const session = await response.json();
       
-      const result = await stripe.redirectToCheckout({
-        sessionId: session.id,
-      });
+      if (session.sessionId) {
+        const result = await stripe.redirectToCheckout({
+          sessionId: session.sessionId,
+        });
   
-      if (result.error) {
-        console.error(result.error);
+        if (result.error) {
+          console.error(result.error);
+        }
+      } else {
+        throw new Error('Failed to create checkout session');
       }
     } catch (error) {
       console.error('Error creating checkout session:', error);
     }
-  }; 
+  };
 
   return (
     <div className="p-8">
