@@ -239,14 +239,25 @@ export default function EmailEditor() {
       </div>
       <div className="flex flex-col h-full">
         <h2 className="text-xl font-semibold mb-2">Live Preview</h2>
-        <p className="text-sm text-gray-500 mb-2">You can preview the email here.</p>
+        <p className="text-sm text-gray-500 mb-2">Preview your email in a Gmail-like interface.</p>
         <div 
           ref={previewRef}
-          className="flex-grow border p-4 overflow-auto bg-white custom-scrollbar"
-          onMouseOver = {handlePreviewHover}>
-          <div className="email-preview" dangerouslySetInnerHTML={{ __html: editableHtml }} />
+          className="flex-grow border rounded-lg overflow-hidden shadow-md bg-white"
+          onMouseOver={handlePreviewHover}
+        >
+          <div className="bg-gray-100 p-2 border-b flex items-center">
+            <div className="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+            <div className="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
+            <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
+            <div className="flex-grow"></div>
+            <div className="text-sm text-gray-600">To: recipient@example.com</div>
+          </div>
+          <div className="p-4">
+            <h3 className="text-xl font-semibold mb-2">{subject || 'No Subject'}</h3>
+              <div className="email-preview" dangerouslySetInnerHTML={{ __html: editableHtml }} />
+            </div>
+          </div>
         </div>
-      </div>
       </div>
       <div className="p-4 bg-gray-100 border-t">
         <div className="max-w-3xl mx-auto">

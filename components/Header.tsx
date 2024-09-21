@@ -9,7 +9,7 @@ export function Header({ className }: { className?: string }) {
     return (
       <header className={`flex justify-between items-center p-4 bg-background border-b ${className}`}>
         <div className="flex items-center">
-          <Link href="/" className="text-2xl font-bold">
+          <Link href={isSignedIn ? "/dashboard" : "/"} className="text-2xl font-bold">
             Qubitly
           </Link>
         </div>
