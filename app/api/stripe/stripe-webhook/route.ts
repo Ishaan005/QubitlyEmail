@@ -25,16 +25,23 @@ export async function POST(request: NextRequest) {
     const session = event.data.object as Stripe.Checkout.Session;
     const userId = session.metadata?.userId;
     const amount = session.amount_total ? Math.floor(session.amount_total / 50) : 0; // 50 cents per credit
-
+  
     if (userId && amount) {
-      await prisma.user.update({
-        where: { userId },
-        data: {
-          credits: {
-            increment: amount,
+      try {
+        const updatedUser = await prisma.user.update({
+          where: { userId },
+          data: {
+            credits: {
+              increment: amount,
+            },
           },
-        },
-      });
+        });
+        console.log(`Credits updated for user ${userId}. New credit balance: ${updatedUser.credits}`);
+      } catch (error) {
+        console.error(`Error updating credits for user ${userId}:`, error);
+      }
+    } else {
+      console.error('Invalid userId or amount in session:', session);
     }
   }
 
