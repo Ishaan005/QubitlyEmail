@@ -9,6 +9,9 @@ import {
 import { Header } from '@/components/Header';
 import 'prismjs/themes/prism.css'
 
+import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/next"
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -37,6 +40,8 @@ export default function RootLayout({
           <Header className = "h-16" />
           <main>{children}</main>
           <Toaster />
+          <Analytics />
+          <SpeedInsights/>
         </body>
       </html>
     </ClerkProvider>
