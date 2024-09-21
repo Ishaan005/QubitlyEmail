@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import stripePromise from '@/lib/stripe';
 
 export default function AddCredits() {
-  const [amount, setAmount] = useState(10);
+  const [amount, setAmount] = useState<number | "">(10);
 
   const handleAddCredits = async () => {
     try {
@@ -47,12 +47,15 @@ export default function AddCredits() {
         <Input
           type="number"
           value={amount}
-          onChange={(e) => setAmount(Number(e.target.value))}
+          onChange={(e) => {
+            const value = e.target.value;
+            setAmount(value === '' ? '' : Math.max(1, Number(value)));
+          }}
           min={1}
-          step={0.5}
+          step={1}
           className="mb-4"
-        />
-        <p className="mb-4">Total cost: ${(amount * 0.5).toFixed(2)}</p>
+        />  
+        <p className="mb-4">Total cost: ${(Number(amount) * 0.5).toFixed(2)}</p>
         <Button onClick={handleAddCredits}>Add Credits</Button>
       </div>
     </div>
