@@ -3,12 +3,16 @@
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import stripePromise from '@/lib/stripe';
 
 export default function AddCredits() {
   const [amount, setAmount] = useState(10);
 
   const handleAddCredits = async () => {
     try {
+      const stripe = await stripePromise;
+      if (!stripe) throw new Error('Stripe failed to initialize');
+  
       const response = await fetch('/api/stripe/create-checkout-session', {
         method: 'POST',
         headers: {
@@ -16,13 +20,20 @@ export default function AddCredits() {
         },
         body: JSON.stringify({ amount }),
       });
-
+  
       const session = await response.json();
-      window.location.href = session.url;
+      
+      const result = await stripe.redirectToCheckout({
+        sessionId: session.id,
+      });
+  
+      if (result.error) {
+        console.error(result.error);
+      }
     } catch (error) {
       console.error('Error creating checkout session:', error);
     }
-  };
+  }; 
 
   return (
     <div className="p-8">
