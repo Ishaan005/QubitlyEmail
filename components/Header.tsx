@@ -1,5 +1,6 @@
 "use client";
 
+import React from 'react';
 import Link from 'next/link';
 import { UserButton, useAuth } from '@clerk/nextjs';
 
@@ -14,6 +15,9 @@ export function Header({ className }: { className?: string }) {
           </Link>
         </div>
         <nav className="flex items-center space-x-4">
+          <Link href="/blog" className="text-foreground hover:text-primary">
+            Blog
+          </Link>
           {isSignedIn ? (
             <>
               <Link href="/dashboard" className="text-foreground hover:text-primary">

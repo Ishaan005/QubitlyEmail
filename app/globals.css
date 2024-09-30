@@ -158,3 +158,12 @@ body {
   pointer-events: none;
   z-index: 1;
 }
+
+/* New styles for blog page */
+.blog-gradient {
+  background: linear-gradient(to bottom, #f7f7f7, #e0e0e0);
+}
+
+.dark .blog-gradient {
+  background: linear-gradient(to bottom, #1a1a1a, #2a2a2a);
+}

@@ -24,8 +24,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Qubitly Email",
-  description: "An AI Email HTML Generator",
+  title: "AI Email HTML Generator | Qubitly Email",
+  description: "Create stunning emails effortlessly with Qubitly's AI Email HTML Generator. Perfect for marketers and business owners.",
 };
 
 export default function RootLayout({

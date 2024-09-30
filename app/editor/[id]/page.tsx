@@ -274,8 +274,8 @@ export default function EmailEditor() {
                 <SelectValue placeholder="Select model" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="gpt-4o-mini">GPT-4o-mini (0.5 credits)</SelectItem>
-                <SelectItem value="claude-3-5-sonnet-20240620">Claude 3.5 Sonnet (1 credit)</SelectItem>
+                <SelectItem value="gpt-4o-mini">Qubit mini (0.5 credits)</SelectItem>
+                <SelectItem value="claude-3-5-sonnet-20240620">Qubit 1 (1 credit)</SelectItem>
               </SelectContent>
             </Select>
             <Button onClick={generateEmail} disabled={isGenerating} className="flex-1 rounded-lg">
